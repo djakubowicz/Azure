@@ -22,14 +22,6 @@
 
   tasks:
 
-    - name: Get subnet info (modern way)
-      azure_rm_subnet_info:
-        resource_group: "{{ resource_group }}"
-        virtual_network_name: "{{ vnet_name }}"
-        name: "{{ subnet_name }}"
-      register: subnet_info
-
-
     - name: Create Network Security Group
       azure_rm_securitygroup:
         resource_group: "{{ resource_group }}"
@@ -48,10 +40,10 @@
         resource_group: "{{ resource_group }}"
         name: "{{ nic_name }}"
         location: "{{ location }}"
+        subnet_name: "{{ subnet_name }}"
         ip_configurations:
           - name: ipconfig1
-            subnet_id: "{{ subnet_info.id }}"
-            private_ip_allocation_method: Dynamic
+              primary: true
         security_group: "{{ nsg_name }}"
       register: nic
 
