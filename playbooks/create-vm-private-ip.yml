@@ -50,7 +50,7 @@
         location: "{{ location }}"
         ip_configurations:
           - name: ipconfig1
-            subnet_id: "{{ subnet_info.subnets[0].id }}"
+            subnet_id: "{{ subnet_info.id }}"
             private_ip_allocation_method: Dynamic
         security_group: "{{ nsg_name }}"
       register: nic
