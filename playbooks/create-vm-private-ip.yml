@@ -68,7 +68,7 @@
           - "{{ nic.id }}"
 
         image:
-          offer: UbuntuServer
+          offer: 'ubuntu-24_04-lts'
           publisher: Canonical
-          sku: 20_04-lts
+          sku: server
           version: latest
