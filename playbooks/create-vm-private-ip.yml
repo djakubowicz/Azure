@@ -43,7 +43,6 @@
         subnet_name: "{{ subnet_name }}"
         ip_configurations:
           - name: ipconfig1
-              primary: true
         security_group: "{{ nsg_name }}"
       register: nic
 
