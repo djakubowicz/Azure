@@ -53,7 +53,6 @@
         name: "{{ vm_name }}"
         location: "{{ location }}"
         vm_size: "{{ vm_size }}"
-        availability_set: avs-managed-disk
         managed_disk_type: Standard_LRS
         
         admin_username: "{{ admin_user }}"
