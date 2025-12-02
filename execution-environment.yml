@@ -1,0 +1,37 @@
+version: 3
+
+dependencies:
+  galaxy:
+    collections:
+      - name: azure.azcollection
+      - name: ansible.utils
+      - name: ansible.posix
+      - name: community.general
+
+  python:
+    - azure-cli-core
+    - azure-cli-telemetry
+    - azure-mgmt-resource
+    - azure-mgmt-compute
+    - azure-mgmt-network
+    - azure-mgmt-storage
+    - azure-identity
+    - msrestazure
+    - msrest
+    - requests
+
+  system:
+    - python3-pip
+    - gcc
+    - python3-devel
+    - krb5-devel
+    - openssl-devel
+    - libffi-devel
+
+images:
+  base_image:
+    name: quay.io/ansible/ansible-runner:stable-2.5
+
+options:
+  package_manager_path: /usr/bin/apt-get
+  # (si image RHEL/ubi -> dnf)
