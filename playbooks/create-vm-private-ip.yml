@@ -58,7 +58,7 @@
         admin_password: "{{ admin_password }}"
 
         network_interfaces:
-          - "{{ nic.id }}"
+          - "{{ nic_name }}"
 
         image:
           offer: 'ubuntu-24_04-lts'
