@@ -1,0 +1,74 @@
+---
+- name: Create Azure VM in existing VNet (NO PUBLIC IP)
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  collections:
+    - azure.azcollection
+
+  vars:
+    resource_group: "myResourceGroup"
+    location: "francecentral"
+    vnet_name: "VNET-Demo"
+    subnet_name: "Subnet-Front"
+
+    vm_name: "DemoVM01"
+    vm_size: "Standard_B2s"
+    admin_user: "azureuser"
+    admin_password: "ChangeM3Now!"
+    nic_name: "nic-{{ vm_name }}"
+    nsg_name: "nsg-{{ vm_name }}"
+
+  tasks:
+
+    - name: Get subnet info
+      azure_rm_subnet_info:
+        resource_group: "{{ resource_group }}"
+        virtual_network_name: "{{ vnet_name }}"
+        name: "{{ subnet_name }}"
+      register: subnet_info
+
+    - name: Create Network Security Group
+      azure_rm_securitygroup:
+        resource_group: "{{ resource_group }}"
+        name: "{{ nsg_name }}"
+        location: "{{ location }}"
+        rules:
+          - name: SSH
+            protocol: Tcp
+            destination_port_range: 22
+            access: Allow
+            priority: 1001
+            direction: Inbound
+
+    - name: Create NIC WITHOUT public IP
+      azure_rm_networkinterface:
+        resource_group: "{{ resource_group }}"
+        name: "{{ nic_name }}"
+        location: "{{ location }}"
+        ip_configurations:
+          - name: ipconfig1
+            subnet_id: "{{ subnet_info.subnets[0].id }}"
+            private_ip_allocation_method: Dynamic
+        security_group: "{{ nsg_name }}"
+      register: nic
+
+    - name: Create the VM
+      azure_rm_virtualmachine:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vm_name }}"
+        location: "{{ location }}"
+        vm_size: "{{ vm_size }}"
+
+        admin_username: "{{ admin_user }}"
+        admin_password: "{{ admin_password }}"
+
+        network_interfaces:
+          - "{{ nic.id }}"
+
+        image:
+          offer: UbuntuServer
+          publisher: Canonical
+          sku: 20_04-lts
+          version: latest
