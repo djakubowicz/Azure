@@ -8,8 +8,8 @@
     - azure.azcollection
 
   vars:
-    resource_group: "RG-Network-Demo"
-    location: "westeurope"
+    resource_group: "myResourceGroup"
+    location: "francecentral"
     vnet_name: "VNET-Demo"
     address_space: "10.10.0.0/16"
     subnet_name: "Subnet-Front"
