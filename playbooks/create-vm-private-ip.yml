@@ -23,7 +23,7 @@
   tasks:
 
     - name: Get subnet info (modern way)
-      azure_rm_subnet:
+      azure_rm_subnet_info:
         resource_group: "{{ resource_group }}"
         virtual_network_name: "{{ vnet_name }}"
         name: "{{ subnet_name }}"
