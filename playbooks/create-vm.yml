@@ -1,0 +1,15 @@
+- name: Provision VM in Azure
+  hosts: localhost
+  tasks:
+    - name: Create virtual machine
+      azure_rm_virtualmachine:
+        resource_group: myResourceGroup
+        name: myVM
+        admin_username: azureuser
+        admin_password: P@ssword1234
+        image:
+          offer: 'ubuntu-24_04-lts'
+          publisher: Canonical
+          sku: server
+          version: latest
+        vm_size: Standard_B2ats_v2
