@@ -22,12 +22,13 @@
 
   tasks:
 
-    - name: Get subnet info
-      azure_rm_subnet_info:
+    - name: Get subnet info (modern way)
+      azure_rm_subnet:
         resource_group: "{{ resource_group }}"
         virtual_network_name: "{{ vnet_name }}"
         name: "{{ subnet_name }}"
       register: subnet_info
+
 
     - name: Create Network Security Group
       azure_rm_securitygroup:
