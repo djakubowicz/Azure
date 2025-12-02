@@ -14,7 +14,7 @@
     subnet_name: "Subnet-Front"
 
     vm_name: "DemoVM01"
-    vm_size: "Standard_B2s"
+    vm_size: "Standard_B2ats_v2"
     admin_user: "azureuser"
     admin_password: "ChangeM3Now!"
     nic_name: "nic-{{ vm_name }}"
