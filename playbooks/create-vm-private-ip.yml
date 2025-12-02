@@ -40,6 +40,7 @@
         resource_group: "{{ resource_group }}"
         name: "{{ nic_name }}"
         location: "{{ location }}"
+        virtual_network: "{{ vnet_name }}"
         subnet_name: "{{ subnet_name }}"
         ip_configurations:
           - name: ipconfig1
