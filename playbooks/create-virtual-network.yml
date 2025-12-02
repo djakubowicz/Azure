@@ -1,0 +1,39 @@
+---
+- name: Create Azure Virtual Network
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  collections:
+    - azure.azcollection
+
+  vars:
+    resource_group: "RG-Network-Demo"
+    location: "westeurope"
+    vnet_name: "VNET-Demo"
+    address_space: "10.10.0.0/16"
+    subnet_name: "Subnet-Front"
+    subnet_prefix: "10.10.1.0/24"
+
+  tasks:
+
+    - name: Ensure resource group exists
+      azure_rm_resourcegroup:
+        name: "{{ resource_group }}"
+        location: "{{ location }}"
+
+    - name: Create virtual network
+      azure_rm_virtualnetwork:
+        resource_group: "{{ resource_group }}"
+        name: "{{ vnet_name }}"
+        location: "{{ location }}"
+        address_prefixes:
+          - "{{ address_space }}"
+        dns_servers: []
+
+    - name: Add subnet to virtual network
+      azure_rm_subnet:
+        resource_group: "{{ resource_group }}"
+        name: "{{ subnet_name }}"
+        address_prefix: "{{ subnet_prefix }}"
+        virtual_network_name: "{{ vnet_name }}"
