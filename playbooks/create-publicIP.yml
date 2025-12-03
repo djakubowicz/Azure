@@ -31,7 +31,7 @@
         # Configuration IP
         allocation_method: Static # Affectation Statique (Static) ou Dynamique (Dynamic)
         sku: Standard             # Niveau SKU (Basic ou Standard)
-        version: IPv4
+        version: ipv4
         
         # Configuration DNS (optionnel)
         domain_name_label: "{{ dns_label }}"
