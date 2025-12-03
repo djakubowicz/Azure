@@ -103,7 +103,7 @@
           sku: "{{ image_sku }}"
           version: "{{ image_version }}"
         # Disque
-        storage_os_disk_name: "{{ vm_name }}-osdisk"
+        managed_disk_type: Standard_LRS
         # Admin SSH
         admin_username: "{{ admin_username }}"
         admin_password: P@ssword1234
