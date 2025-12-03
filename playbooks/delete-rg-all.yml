@@ -1,0 +1,26 @@
+---
+- name: Supprimer le Groupe de Ressources (et toutes les ressources qu'il contient)
+  hosts: localhost 
+  connection: local
+  gather_facts: no 
+
+  vars:
+    # IMPORTANT : Ce nom DOIT correspondre au groupe créé précédemment.
+    resource_group_name: "myResourceGroup" 
+    
+  tasks:
+    
+    - name: Confirmation de la suppression du Groupe de Ressources
+      pause:
+        prompt: "Ceci va supprimer DÉFINITIVEMENT le groupe de ressources '{{ resource_group_name }}' et toutes ses ressources (VM, IP, VNet, etc.). Confirmez en appuyant sur [Entrée] ou annulez avec [Ctrl+C]"
+
+    - name: Suppression du Groupe de Ressources Azure
+      azure_rm_resourcegroup:
+        name: "{{ resource_group_name }}"
+        state: absent # C'est la clé de la suppression !
+        force: yes    # Assure que la suppression est forcée même si des dépendances existent.
+      register: delete_output
+      
+    - name: Affichage du résultat de la suppression
+      debug:
+        msg: "Le Groupe de Ressources '{{ resource_group_name }}' est en cours de suppression ou a été supprimé."
