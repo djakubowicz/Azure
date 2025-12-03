@@ -19,7 +19,7 @@
     subnet_prefix: "10.0.0.0/24"
     public_ip_name: "pip-ansible-web-01"
     nic_name: "nic-web-server-01"
-    
+        
     # --- Configuration VM OS (Ubuntu 20.04 LTS) ---
     image_publisher: "Canonical"
     image_offer: "ubuntu-24_04-lts"
@@ -44,9 +44,15 @@
         name: "{{ vnet_name }}"
         location: "{{ location }}"
         address_prefixes: "10.0.0.0/16"
-        subnets:
-          - name: "{{ subnet_name }}"
-            address_prefix: "{{ subnet_prefix }}"
+        dns_servers: []
+        state: present
+
+    - name: Add subnet to virtual network
+      azure_rm_subnet:
+        resource_group: "{{ resource_group_name }}"
+        name: "{{ subnet_name }}"
+        address_prefix: "{{ subnet_prefix }}"
+        virtual_network_name: "{{ vnet_name }}"
         state: present
 
     # --------------------------------------------------------------------------------
