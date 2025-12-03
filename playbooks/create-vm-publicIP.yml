@@ -78,9 +78,12 @@
         name: "{{ nic_name }}"
         location: "{{ location }}"
         state: present
-        virtual_network: "{{ vnet_name }}"
-        subnet: "{{ subnet_name }}"
-        public_ip_address: "{{ public_ip_name }}" # Association de l'IP Publique
+        virtual_network_name: "{{ vnet_name }}"
+        subnet_name: "{{ subnet_name }}"
+        ip_configurations:
+          - name: ipconfig1
+            public_ip_address_name: "{{ public_ip_name }}" # Association de l'IP Publique
+            primary: true        
       register: nic_output
 
     # --------------------------------------------------------------------------------
