@@ -9,10 +9,6 @@
     resource_group_name: "myResourceGroup" 
     
   tasks:
-    
-    - name: Confirmation de la suppression du Groupe de Ressources
-      pause:
-        prompt: "Ceci va supprimer DÉFINITIVEMENT le groupe de ressources '{{ resource_group_name }}' et toutes ses ressources (VM, IP, VNet, etc.). Confirmez en appuyant sur [Entrée] ou annulez avec [Ctrl+C]"
 
     - name: Suppression du Groupe de Ressources Azure
       azure_rm_resourcegroup:
