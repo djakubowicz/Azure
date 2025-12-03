@@ -8,7 +8,7 @@
 
   vars:
     resource_group_name: "myResourceGroup" # Nom du groupe de ressources cible
-    location: "francentral"             # Région Azure
+    location: "francecentral"             # Région Azure
     public_ip_name: "pip-ansible-web-01" # Nom de la nouvelle adresse IP publique
     dns_label: "ansibleweb01"          # Nom d'étiquette DNS (ex: ansibleweb01.westeurope.cloudapp.azure.com)
 
