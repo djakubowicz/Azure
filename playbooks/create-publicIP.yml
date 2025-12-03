@@ -1,0 +1,43 @@
+---
+- name: Créer une adresse IP publique Azure (Public IP Address)
+  hosts: localhost # Exécuté localement, car c'est un playbook de gestion du cloud
+  connection: local
+  gather_facts: no # Inutile de collecter les faits sur localhost
+
+  vars:
+    resource_group_name: "myResourceGroup" # Nom du groupe de ressources cible
+    location: "francentral"             # Région Azure
+    public_ip_name: "pip-ansible-web-01" # Nom de la nouvelle adresse IP publique
+    dns_label: "ansibleweb01"          # Nom d'étiquette DNS (ex: ansibleweb01.westeurope.cloudapp.azure.com)
+
+  tasks:
+    - name: Création du Groupe de Ressources (si non existant)
+      azure_rm_resourcegroup:
+        name: "{{ resource_group_name }}"
+        location: "{{ location }}"
+        state: present
+      register: rg_output
+
+    - name: Création de l'Adresse IP Publique
+      azure_rm_publicipaddress:
+        # Configuration de base
+        resource_group: "{{ resource_group_name }}"
+        name: "{{ public_ip_name }}"
+        location: "{{ location }}"
+        state: present
+        
+        # Configuration IP
+        allocation_method: Static # Affectation Statique (Static) ou Dynamique (Dynamic)
+        sku: Standard             # Niveau SKU (Basic ou Standard)
+        version: IPv4
+        
+        # Configuration DNS (optionnel)
+        domain_name_label: "{{ dns_label }}"
+      register: public_ip_output
+      
+    - name: Afficher l'adresse IP publique créée
+      debug:
+        msg: |
+          L'adresse IP publique "{{ public_ip_name }}" a été créée avec succès.
+          Adresse IP : {{ public_ip_output.state.ip_address }}
+          Nom de domaine complet (FQDN) : {{ public_ip_output.state.dns_settings.fqdn }}
