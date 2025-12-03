@@ -1,6 +1,8 @@
 ---
 - name: Créer une adresse IP publique Azure (Public IP Address)
   hosts: localhost # Exécuté localement, car c'est un playbook de gestion du cloud
+  collections:
+    - azure.azcollection
   connection: local
   gather_facts: no # Inutile de collecter les faits sur localhost
 
