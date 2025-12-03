@@ -1,0 +1,112 @@
+---
+- name: Créer une Machine Virtuelle Azure avec une nouvelle IP Publique
+  hosts: localhost 
+  connection: local
+  collections:
+    - azure.azcollection
+  gather_facts: no 
+
+  vars:
+    # --- Configuration générale ---
+    resource_group_name: "myResourceGroup" # Groupe de ressources
+    location: "francecentral"                     # Région Azure
+    vm_name: "web-server-01"               # Nom de la VM
+    admin_username: "azureuser"            # Nom d'utilisateur SSH
+      
+    # --- Configuration Réseau ---
+    vnet_name: "vnet-ansible-prod"
+    subnet_name: "subnet-web"
+    subnet_prefix: "10.0.0.0/24"
+    public_ip_name: "pip-ansible-web-01"
+    nic_name: "nic-web-server-01"
+    
+    # --- Configuration VM OS (Ubuntu 20.04 LTS) ---
+    image_publisher: "Canonical"
+    image_offer: "ubuntu-24_04-lts"
+    image_sku: "server"
+    image_version: "latest"
+    vm_size: "Standard_B2ats_v2" # Taille de VM économique pour le test
+
+  tasks:
+    
+    - name: Création du Groupe de Ressources (si non existant)
+      azure_rm_resourcegroup:
+        name: "{{ resource_group_name }}"
+        location: "{{ location }}"
+        state: present
+    
+    # --------------------------------------------------------------------------------
+    # Partie 1 : Création des Ressources Réseau (VNet et Sous-réseau)
+    # --------------------------------------------------------------------------------
+    - name: Création du Réseau Virtuel (VNet) et du Sous-réseau
+      azure_rm_virtualnetwork:
+        resource_group: "{{ resource_group_name }}"
+        name: "{{ vnet_name }}"
+        location: "{{ location }}"
+        address_prefixes: "10.0.0.0/16"
+        subnets:
+          - name: "{{ subnet_name }}"
+            address_prefix: "{{ subnet_prefix }}"
+        state: present
+
+    # --------------------------------------------------------------------------------
+    # Partie 2 : Création de l'IP Publique
+    # --------------------------------------------------------------------------------
+    - name: Création de l'Adresse IP Publique
+      azure_rm_publicipaddress:
+        resource_group: "{{ resource_group_name }}"
+        name: "{{ public_ip_name }}"
+        location: "{{ location }}"
+        state: present
+        allocation_method: Static # Statique est recommandé
+        sku: Standard             # SKU Standard
+        version: ipv4
+      register: public_ip_output # Enregistrement de la sortie pour l'IP
+
+    # --------------------------------------------------------------------------------
+    # Partie 3 : Création de la Carte Réseau (NIC) et Association de l'IP
+    # --------------------------------------------------------------------------------
+    - name: Création de la Carte Réseau (NIC) et association de l'IP Publique
+      azure_rm_networkinterface:
+        resource_group: "{{ resource_group_name }}"
+        name: "{{ nic_name }}"
+        location: "{{ location }}"
+        state: present
+        virtual_network: "{{ vnet_name }}"
+        subnet: "{{ subnet_name }}"
+        public_ip_address: "{{ public_ip_name }}" # Association de l'IP Publique
+      register: nic_output
+
+    # --------------------------------------------------------------------------------
+    # Partie 4 : Création de la Machine Virtuelle (VM)
+    # --------------------------------------------------------------------------------
+    - name: Création de la Machine Virtuelle Linux
+      azure_rm_virtualmachine:
+        resource_group: "{{ resource_group_name }}"
+        name: "{{ vm_name }}"
+        location: "{{ location }}"
+        state: present
+        vm_size: "{{ vm_size }}"
+        # Configuration du système d'exploitation
+        image:
+          publisher: "{{ image_publisher }}"
+          offer: "{{ image_offer }}"
+          sku: "{{ image_sku }}"
+          version: "{{ image_version }}"
+        # Disque
+        storage_os_disk_name: "{{ vm_name }}-osdisk"
+        # Admin SSH
+        admin_username: "{{ admin_username }}"
+        admin_password: P@ssword1234
+        # Rattacher la NIC
+        network_interfaces: 
+          - "{{ nic_name }}"
+      register: vm_output
+
+    - name: Afficher l'adresse IP pour la connexion SSH
+      debug:
+        msg: |
+          La VM '{{ vm_name }}' a été créée avec succès.
+          Vous pouvez vous connecter en SSH avec : 
+          ssh {{ admin_username }}@{{ public_ip_output.state.ip_address }}
+          (L'adresse IP est : {{ public_ip_output.state.ip_address }})
