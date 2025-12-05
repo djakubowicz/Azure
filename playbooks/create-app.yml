@@ -1,0 +1,36 @@
+---
+- name: Deploy Containerized Application
+  hosts: webservers
+  become: yes # Run tasks with sudo privileges
+
+  tasks:
+    - name: Install Docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker service is running
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Install Docker Python module
+      ansible.builtin.pip:
+        name: docker
+
+    - name: Pull Docker image
+      community.docker.docker_image:
+        name: your_docker_image_name:tag # e.g., nginx:latest
+        source: pull
+
+    - name: Run container
+      community.docker.docker_container:
+        name: your_container_name # e.g., my_web_app
+        image: your_docker_image_name:tag
+        ports:
+          - "80:80" # Map host port 80 to container port 80
+        state: started
+        restart_policy: always
+
