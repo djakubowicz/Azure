@@ -1,6 +1,6 @@
 ---
 - name: Deploy Containerized Application
-  hosts: webservers
+  hosts: all
   become: yes # Run tasks with sudo privileges
 
   tasks:
