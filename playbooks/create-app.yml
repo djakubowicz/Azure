@@ -22,13 +22,13 @@
 
     - name: Pull Docker image
       community.docker.docker_image:
-        name: your_docker_image_name:tag # e.g., nginx:latest
+        name: agrawpri/2048-docker
         source: pull
 
     - name: Run container
       community.docker.docker_container:
-        name: your_container_name # e.g., my_web_app
-        image: your_docker_image_name:tag
+        name: 2048-app # e.g., my_web_app
+        image: agrawpri/2048-docker
         ports:
           - "80:80" # Map host port 80 to container port 80
         state: started
