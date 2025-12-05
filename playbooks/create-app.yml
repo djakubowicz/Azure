@@ -21,12 +21,12 @@
         name: docker
 
     - name: Pull Docker image
-        docker_image:
+      docker_image:
         name: agrawpri/2048-docker
         source: pull
 
     - name: Run container
-        docker_container:
+       docker_container:
         name: 2048-app # e.g., my_web_app
         image: agrawpri/2048-docker:latest
         ports:
