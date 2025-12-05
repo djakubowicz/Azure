@@ -20,17 +20,10 @@
       ansible.builtin.pip:
         name: docker
 
-    - name: Pull Docker image
-      docker_image:
-        name: agrawpri/2048-docker
-        source: pull
 
-    - name: Run container
-      docker_container:
-        name: 2048-app # e.g., my_web_app
-        image: agrawpri/2048-docker:latest
-        ports:
-          - "80:80" # Map host port 80 to container port 80
-        state: started
-        restart_policy: always
+    - name: Pull Docker images
+      command: docker pull agrawpri/2048-docker
+
+    - name: run Docker images
+      command: docker run --rm -p 80:80 agrawpri/2048-docker
 
