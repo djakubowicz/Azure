@@ -21,14 +21,14 @@
         name: docker
 
     - name: Pull Docker image
-      community.docker.docker_image:
+        docker_image:
         name: agrawpri/2048-docker
         source: pull
 
     - name: Run container
-      community.docker.docker_container:
+        docker_container:
         name: 2048-app # e.g., my_web_app
-        image: agrawpri/2048-docker
+        image: agrawpri/2048-docker:latest
         ports:
           - "80:80" # Map host port 80 to container port 80
         state: started
