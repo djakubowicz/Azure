@@ -12,6 +12,7 @@
     location: "francecentral"                     # Région Azure
     vm_name: "web-server-01"               # Nom de la VM
     admin_username: "azureuser"            # Nom d'utilisateur SSH
+    admin_password: "Password1!"
       
     # --- Configuration Réseau ---
     vnet_name: "vnet-ansible-prod"
@@ -106,7 +107,7 @@
         managed_disk_type: Standard_LRS
         # Admin SSH
         admin_username: "{{ admin_username }}"
-        admin_password: P@ssword1234
+        admin_password: "{{ admin_password }}"
         # Rattacher la NIC
         network_interfaces: 
           - "{{ nic_name }}"
