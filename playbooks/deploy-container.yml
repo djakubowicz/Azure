@@ -15,6 +15,22 @@
     
   tasks:
   
+    - name: Install Docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker service is running
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Install Docker Python module
+      ansible.builtin.pip:
+        name: docker
+        
     - name: Deploy and run the container
       community.docker.docker_container:
         name: "{{ app_container_name }}"
