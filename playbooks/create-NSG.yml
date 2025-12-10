@@ -1,0 +1,34 @@
+---
+# -------------------------------------------------------
+# PARTIE 1 : Ouverture côté Cloud (Azure NSG)
+# Cette partie s'exécute sur le contrôleur (localhost)
+# -------------------------------------------------------
+- name: Open Port in Azure Network Security Group (NSG)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  
+  collections:
+    - azure.azcollection
+
+  vars:
+    # Remplacez par vos vraies valeurs
+    resource_group_name: "myResourceGroup"
+    nsg_name: "VM-nsg"  # Le nom de la ressource "Network Security Group" dans Azure
+    rule_name: "Allow_Web_8080"
+    priority: 1010        # Attention à ne pas écraser une règle existante avec la même priorité
+
+  tasks:
+    - name: Create or update NSG rule for port 8080
+      azure.azcollection.azure_rm_securitygroup:
+        resource_group: "{{ resource_group_name }}"
+        name: "{{ nsg_name }}"
+        rules:
+          - name: "{{ rule_name }}"
+            protocol: Tcp
+            destination_port_range: 8080
+            access: Allow
+            priority: "{{ priority }}"
+            direction: Inbound
+            source_address_prefix: "*" # Ou mettez votre IP publique pour sécuriser (ex: 1.2.3.4)
+            description: "Ouverture du port 8080 via Ansible"
