@@ -1,37 +1,29 @@
+---
 version: 3
+
+images:
+  base_image:
+    name: registry.redhat.io/ansible-automation-platform-25/ee-minimal-rhel9:latest
 
 dependencies:
   galaxy:
     collections:
-      - name: azure.azcollection
-      - name: ansible.utils
-      - name: ansible.posix
-      - name: community.general
+      - name: community.docker
 
   python:
-    - azure-cli-core
-    - azure-cli-telemetry
-    - azure-mgmt-resource
-    - azure-mgmt-compute
-    - azure-mgmt-network
-    - azure-mgmt-storage
-    - azure-identity
-    - msrestazure
-    - msrest
+    # On garde uniquement le SDK docker moderne
+    - docker>=6.0.0
     - requests
+    # SUPPRIMÉ : - docker-compose (C'est lui le coupable)
 
   system:
+    - git
     - python3-pip
-    - gcc
     - python3-devel
-    - krb5-devel
-    - openssl-devel
-    - libffi-devel
-
-images:
-  base_image:
-    name: quay.io/ansible/ansible-runner:stable-2.5
+    - gcc
+    # Si tu as besoin de fonctionnalités Docker Compose, il vaut mieux installer le plugin CLI
+    # Note : Cela dépend si le paquet est dispo dans les repos de ton image de base.
+    # Sinon, le module community.docker standard (docker_container) suffit pour 99% des cas.
 
 options:
-  package_manager_path: /usr/bin/apt-get
-  # (si image RHEL/ubi -> dnf)
+  package_manager_path: /usr/bin/microdnf
