@@ -23,7 +23,6 @@
       ansible.builtin.apt:
         name: 
           - docker.io
-          - python3-docker
         state: present
         
     - name: Ensure Docker service is running
@@ -31,10 +30,6 @@
         name: docker
         state: started
         enabled: yes
-
-    - name: Install Docker Python module
-      ansible.builtin.pip:
-        name: docker
         
     - name: Deploy and run the container
       community.docker.docker_container:
