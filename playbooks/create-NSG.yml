@@ -14,7 +14,7 @@
   vars:
     # Remplacez par vos vraies valeurs
     resource_group_name: "myResourceGroup"
-    nsg_name: "VM-nsg"  # Le nom de la ressource "Network Security Group" dans Azure
+    nsg_name: "nic-web-server-01"  # Le nom de la ressource "Network Security Group" dans Azure
     rule_name: "Allow_Web_8080"
     priority: 1010        # Attention à ne pas écraser une règle existante avec la même priorité
 
