@@ -14,13 +14,18 @@
     container_port: 80
     
   tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
   
     - name: Install Docker
       ansible.builtin.apt:
-        name: docker.io
+        name: 
+          - docker.io
+          - python3-docker
         state: present
-        update_cache: yes
-
+        
     - name: Ensure Docker service is running
       ansible.builtin.service:
         name: docker
