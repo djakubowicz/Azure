@@ -1,0 +1,27 @@
+---
+- name: Deploy a Containerized Web Application
+  hosts: all
+  become: true # Use privilege escalation (sudo) for system tasks
+
+  collections:
+    - community.docker
+
+  vars:
+    app_container_name: my-web-app
+    app_image_name: agrawpri/2048-docker
+    app_image_tag: latest
+    host_port: 8080
+    container_port: 80
+    
+  tasks:
+  
+    - name: Deploy and run the container
+      community.docker.docker_container:
+        name: "{{ app_container_name }}"
+        image: "{{ app_image_name }}:{{ app_image_tag }}"
+        state: started
+        ports:
+          - "{{ host_port }}:{{ container_port }}"
+        restart_policy: always
+        # This task ensures the container is running, is named correctly, 
+        # and has the correct port mapping. It's idempotent.
