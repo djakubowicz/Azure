@@ -1,7 +1,7 @@
 ---
 - name: Deploy a Containerized Web Application
   hosts: all
-  become: true # Use privilege escalation (sudo) for system tasks
+  become: yes # Use privilege escalation (sudo) for system tasks
 
   collections:
     - community.docker
